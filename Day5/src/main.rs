@@ -27,12 +27,12 @@ fn part1() {
     println!("Part one:");
     let mut lines = lines_from_file("/src/input.txt");
     let vents = parse_input(lines);
-    let mut field: HashMap<(u32,u32),u32> = HashMap::new();
+    let mut field: HashMap<(i32,i32),i32> = HashMap::new();
 
     for vent in vents {
         if vent.start.0 == vent.end.0 {
             if vent.start.1 < vent.end.1 {
-                let mut i = vent.start.1;
+                let mut i: i32 = vent.start.1;
                 while i <= vent.end.1 {
                     if field.contains_key(&(vent.start.0,i)) {
                         let cur_val = field.get(&(vent.start.0,i)).unwrap();
@@ -43,7 +43,7 @@ fn part1() {
                     i = i + 1;
                 }
             } else if vent.start.1 > vent.end.1 {
-                let mut i = vent.start.1;
+                let mut i: i32 = vent.start.1;
                 while i >= vent.end.1 {
                     if field.contains_key(&(vent.start.0,i)) {
                         let cur_val = field.get(&(vent.start.0,i)).unwrap();
@@ -56,7 +56,7 @@ fn part1() {
             }
         } else if vent.start.1 == vent.end.1 {
             if vent.start.0 < vent.end.0 {
-                let mut i = vent.start.0;
+                let mut i: i32 = vent.start.0;
                 while i <= vent.end.0 {
                     if field.contains_key(&(i,vent.start.1)) {
                         let cur_val = field.get(&(i,vent.start.1)).unwrap();
@@ -67,7 +67,7 @@ fn part1() {
                     i = i + 1;
                 }
             } else if vent.start.0 > vent.end.0 {
-                let mut i = vent.start.0;
+                let mut i: i32 = vent.start.0;
                 while i >= vent.end.0 {
                     if field.contains_key(&(i,vent.start.1)) {
                         let cur_val = field.get(&(i,vent.start.1)).unwrap();
@@ -89,12 +89,12 @@ fn part2(){
     println!("Part two:");
     let mut lines = lines_from_file("/src/input.txt");
     let vents = parse_input(lines);
-    let mut field: HashMap<(u32,u32),u32> = HashMap::new();
+    let mut field: HashMap<(i32,i32),i32> = HashMap::new();
 
     for vent in vents {
         if vent.start.0 == vent.end.0 {
             if vent.start.1 < vent.end.1 {
-                let mut i = vent.start.1;
+                let mut i: i32 = vent.start.1;
                 while i <= vent.end.1 {
                     if field.contains_key(&(vent.start.0,i)) {
                         let cur_val = field.get(&(vent.start.0,i)).unwrap();
@@ -105,7 +105,7 @@ fn part2(){
                     i = i + 1;
                 }
             } else if vent.start.1 > vent.end.1 {
-                let mut i = vent.start.1;
+                let mut i: i32 = vent.start.1;
                 while i >= vent.end.1 {
                     if field.contains_key(&(vent.start.0,i)) {
                         let cur_val = field.get(&(vent.start.0,i)).unwrap();
@@ -121,7 +121,7 @@ fn part2(){
             }
         } else if vent.start.1 == vent.end.1 {
             if vent.start.0 < vent.end.0 {
-                let mut i = vent.start.0;
+                let mut i: i32 = vent.start.0;
                 while i <= vent.end.0 {
                     if field.contains_key(&(i,vent.start.1)) {
                         let cur_val = field.get(&(i,vent.start.1)).unwrap();
@@ -132,7 +132,7 @@ fn part2(){
                     i = i + 1;
                 }
             } else if vent.start.0 > vent.end.0 {
-                let mut i = vent.start.0;
+                let mut i: i32 = vent.start.0;
                 while i >= vent.end.0 {
                     if field.contains_key(&(i,vent.start.1)) {
                         let cur_val = field.get(&(i,vent.start.1)).unwrap();
@@ -149,64 +149,17 @@ fn part2(){
 
         } else {
             if vent.start.0 > vent.end.0 && vent.start.1 > vent.end.1 {
-                let mut i = vent.start.0;
-                let mut k = 0;
-                while i >= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1-k)) {
-                        let cur_val = field.get(&(i,vent.start.1-k)).unwrap();
-                        field.insert((i,vent.start.1-k), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1-k), 1);
-                    }
-
-                    if (i==0 && vent.end.0 == 0) {
-                        break;
-                    }
-                    i = i - 1;
-                    k = k + 1;
-                }
+                field = calculate_path(field, vent, -1, -1, -1);
+                
             } else if vent.start.0 < vent.end.0 && vent.start.1 < vent.end.1{
-                let mut i = vent.start.0;
-                let mut k = 0;
-                while i <= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1+k)) {
-                        let cur_val = field.get(&(i,vent.start.1+k)).unwrap();
-                        field.insert((i,vent.start.1+k), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1+k), 1);
-                    }
-                    i = i + 1;
-                    k = k + 1;
-                }
+                field = calculate_path(field, vent, 1, 1, 1);
+                
             } else if vent.start.0 < vent.end.0 && vent.start.1 > vent.end.1{
-                let mut i = vent.start.0;
-                let mut k = 0;
-                while i <= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1-k)) {
-                        let cur_val = field.get(&(i,vent.start.1-k)).unwrap();
-                        field.insert((i,vent.start.1-k), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1-k), 1);
-                    }
-                    i = i + 1;
-                    k = k + 1;
-                }
+                field = calculate_path(field, vent, 1, -1, 1);
+                
             } else if vent.start.0 > vent.end.0 && vent.start.1 < vent.end.1{
-                let mut i = vent.start.0;
-                let mut k = 0;
-                while i >= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1+k)) {
-                        let cur_val = field.get(&(i,vent.start.1+k)).unwrap();
-                        field.insert((i,vent.start.1+k), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1+k), 1);
-                    }
-                    if (i==0 && vent.end.0 == 0) {
-                        break;
-                    }
-                    i = i - 1;
-                    k = k + 1;
-                }
+                field = calculate_path(field, vent, -1, 1, -1);
+                
             }
 
         }
@@ -217,11 +170,11 @@ fn part2(){
 
 #[derive(Debug)]
 struct Vent {
-    start: (u32,u32),
-    end: (u32,u32),
+    start: (i32,i32),
+    end: (i32,i32),
 }
 
-fn calculate_overlaps(map: &mut HashMap<(u32,u32),u32>) -> u32 {
+fn calculate_overlaps(map: &mut HashMap<(i32,i32),i32>) -> i32 {
     let mut total_overlaps = 0;
     for (key, value) in &*map {
         if value > &1 {
@@ -240,10 +193,26 @@ fn parse_input(lines: Vec<String>) -> Vec<Vent> {
 
         let end_string: Vec<&str> = no_space[2].split(',').collect();
         let vent: Vent = Vent {
-            start: (start_string[0].parse::<u32>().unwrap(),start_string[1].parse::<u32>().unwrap()),
-            end: (end_string[0].parse::<u32>().unwrap(),end_string[1].parse::<u32>().unwrap())
+            start: (start_string[0].parse::<i32>().unwrap(),start_string[1].parse::<i32>().unwrap()),
+            end: (end_string[0].parse::<i32>().unwrap(),end_string[1].parse::<i32>().unwrap())
         };
         vents.push(vent);
     }
     return vents;
+}
+
+fn calculate_path(mut field: HashMap<(i32,i32),i32>, vent: Vent, i_sign: i32, k_sign: i32, direction: i32) -> HashMap<(i32,i32),i32> {
+    let mut i: i32 = vent.start.0;
+    let mut k: i32 = 0;
+    while i * direction <= vent.end.0 * direction {
+        if field.contains_key(&(i,vent.start.1+k_sign)) {
+            let cur_val = field.get(&(i,vent.start.1+k_sign)).unwrap();
+            field.insert((i,vent.start.1+k_sign), cur_val + 1);
+        } else {
+            field.insert((i,vent.start.1+k_sign), 1);
+        }
+        i = i + i_sign;
+        k = k + 1;
+    }
+    return field
 }
