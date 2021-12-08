@@ -121,50 +121,28 @@ fn part2(){
             }
         } else if vent.start.1 == vent.end.1 {
             if vent.start.0 < vent.end.0 {
-                let mut i: i32 = vent.start.0;
-                while i <= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1)) {
-                        let cur_val = field.get(&(i,vent.start.1)).unwrap();
-                        field.insert((i,vent.start.1), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1), 1);
-                    }
-                    i = i + 1;
-                }
+                field = calculate_path(field, vent.end.0, 1, 0, 1, vent.start.0, vent.start.1);
+                
             } else if vent.start.0 > vent.end.0 {
-                let mut i: i32 = vent.start.0;
-                while i >= vent.end.0 {
-                    if field.contains_key(&(i,vent.start.1)) {
-                        let cur_val = field.get(&(i,vent.start.1)).unwrap();
-                        field.insert((i,vent.start.1), cur_val + 1);
-                    } else {
-                        field.insert((i,vent.start.1), 1);
-                    }
-                    if (i==0 && vent.end.0 == 0) {
-                        break;
-                    }
-                    i = i - 1;
-                }
+                field = calculate_path(field, vent.end.0, -1, 0, -1, vent.start.0, vent.start.1);
             }
-
         } else {
             if vent.start.0 > vent.end.0 && vent.start.1 > vent.end.1 {
-                field = calculate_path(field, vent, -1, -1, -1);
+                field = calculate_path(field, vent.end.0, -1, -1, -1, vent.start.0, vent.start.1);
                 
             } else if vent.start.0 < vent.end.0 && vent.start.1 < vent.end.1{
-                field = calculate_path(field, vent, 1, 1, 1);
+                field = calculate_path(field, vent.end.0, 1, 1, 1, vent.start.0, vent.start.1);
                 
             } else if vent.start.0 < vent.end.0 && vent.start.1 > vent.end.1{
-                field = calculate_path(field, vent, 1, -1, 1);
+                field = calculate_path(field, vent.end.0, 1, -1, 1, vent.start.0, vent.start.1);
                 
             } else if vent.start.0 > vent.end.0 && vent.start.1 < vent.end.1{
-                field = calculate_path(field, vent, -1, 1, -1);
+                field = calculate_path(field, vent.end.0, -1, 1, -1, vent.start.0, vent.start.1);
                 
             }
 
         }
     }
-   
     println!("Total of increases: {}", calculate_overlaps(&mut field));
 }
 
@@ -201,18 +179,18 @@ fn parse_input(lines: Vec<String>) -> Vec<Vent> {
     return vents;
 }
 
-fn calculate_path(mut field: HashMap<(i32,i32),i32>, vent: Vent, i_sign: i32, k_sign: i32, direction: i32) -> HashMap<(i32,i32),i32> {
-    let mut i: i32 = vent.start.0;
+fn calculate_path(mut field: HashMap<(i32,i32),i32>, end: i32, i_sign: i32, k_sign: i32, direction: i32, x_start: i32, y_start: i32) -> HashMap<(i32,i32),i32> {
+    let mut i: i32 = x_start;
     let mut k: i32 = 0;
-    while i * direction <= vent.end.0 * direction {
-        if field.contains_key(&(i,vent.start.1+k_sign)) {
-            let cur_val = field.get(&(i,vent.start.1+k_sign)).unwrap();
-            field.insert((i,vent.start.1+k_sign), cur_val + 1);
+    while i * direction <= end * direction  {
+        if field.contains_key(&(i,y_start+k)) {
+            let cur_val = field.get(&(i,y_start+k)).unwrap();
+            field.insert((i,y_start+k), cur_val + 1);
         } else {
-            field.insert((i,vent.start.1+k_sign), 1);
+            field.insert((i,y_start+k), 1);
         }
         i = i + i_sign;
-        k = k + 1;
+        k = k + k_sign;
     }
     return field
 }
