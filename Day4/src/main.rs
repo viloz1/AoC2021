@@ -1,12 +1,3 @@
-//-------------------------
-//-------DISCLAIMER--------
-//This code doesn't work.
-//Part 2 was infuriating,
-//and i didn't bother to
-//make part 1 functional
-//after making part 2
-//-------------------------
-
 use std::{
     fs::File,
     io::{prelude::*, BufReader},
@@ -152,7 +143,6 @@ fn parse_board(input: Vec<String>) -> Vec<Vec<BoardNumber>> {
             board.push(entry);
         }
     }
-
     boards.push(board);
     return boards
 }
