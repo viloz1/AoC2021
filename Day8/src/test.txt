@@ -1,0 +1,15 @@
+bottom_left is b
+top_right is c
+bottom_right is a
+bottom is g
+top is f
+middle is e
+top_left is d
+
+top is f
+bottom_right is a
+middle is b
+bottom_left is d
+top_left is e
+top_right is c
+bottom is g
